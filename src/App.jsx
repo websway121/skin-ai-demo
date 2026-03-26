@@ -44,14 +44,11 @@ export default function App() {
   const runAnalysis = async () => {
     setStep("analysing");
     setAnalysisStep(0);
-
     for (let i = 0; i < analysisSteps.length; i++) {
       await new Promise((r) => setTimeout(r, 900));
       setAnalysisStep(i);
     }
-
     await new Promise((r) => setTimeout(r, 600));
-
     const toBase64 = (file) =>
       new Promise((res, rej) => {
         const reader = new FileReader();
@@ -59,17 +56,14 @@ export default function App() {
         reader.onerror = rej;
         reader.readAsDataURL(file);
       });
-
     try {
       const base64 = await toBase64(uploadedImage.file);
       const mediaType = uploadedImage.file.type || "image/jpeg";
-
       const response = await fetch("/api/analyse", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ base64, mediaType }),
       });
-
       const parsed = await response.json();
       setAnalysisResult(parsed);
       setStep("result");
@@ -153,17 +147,25 @@ export default function App() {
             <div style={{ background: "linear-gradient(145deg, #F5F0EB 0%, #EDE8E3 100%)", aspectRatio: "1", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 20, border: "1px solid #DDD", position: "relative", overflow: "hidden" }}>
               <div style={{ fontSize: 80 }}>🧴</div>
               <div style={{ fontFamily: "'Cormorant Garamond'", fontSize: 22, color: "#888", fontStyle: "italic" }}>Your perfect routine awaits</div>
-              {[{ top: "15%", left: "5%", label: "Hydration ✓", bg: "#C8E6FF" }, { top: "30%", right: "5%", label: "Acne zone ⚠", bg: "#FFD6D6" }, { bottom: "25%", left: "5%", label: "T-zone oily", bg: "#FFF3CD" }, { bottom: "15%", right: "8%", label: "Even tone ✓", bg: "#D4F5E9" }].map((tag) => (
+              {[
+                { top: "15%", left: "5%", label: "Hydration ✓", bg: "#C8E6FF" },
+                { top: "30%", right: "5%", label: "Acne zone ⚠", bg: "#FFD6D6" },
+                { bottom: "25%", left: "5%", label: "T-zone oily", bg: "#FFF3CD" },
+                { bottom: "15%", right: "8%", label: "Even tone ✓", bg: "#D4F5E9" },
+              ].map((tag) => (
                 <div key={tag.label} style={{ position: "absolute", top: tag.top, left: tag.left, right: tag.right, bottom: tag.bottom, background: tag.bg, padding: "6px 12px", fontFamily: "'DM Sans'", fontSize: 12, fontWeight: 500, whiteSpace: "nowrap" }}>{tag.label}</div>
               ))}
             </div>
           </div>
-
           <div style={{ background: "#1C1C1C", color: "#FAFAF7", padding: "80px 40px" }}>
             <div style={{ maxWidth: 1100, margin: "0 auto" }}>
               <h2 style={{ fontFamily: "'Cormorant Garamond'", fontSize: 44, fontWeight: 300, marginBottom: 60 }}>Three steps to your <em>ideal routine</em></h2>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 40 }}>
-                {[{ num: "01", title: "Upload Photo", desc: "Take a selfie or upload a recent photo in natural light. No filters, no makeup for best results." }, { num: "02", title: "AI Analysis", desc: "Our model scans 12 skin parameters: hydration, sebum, texture, pigmentation, pores, and more." }, { num: "03", title: "Your Routine", desc: "Receive a personalised product stack curated specifically for your skin's unique needs." }].map((item) => (
+                {[
+                  { num: "01", title: "Upload Photo", desc: "Take a selfie or upload a recent photo in natural light. No filters, no makeup for best results." },
+                  { num: "02", title: "AI Analysis", desc: "Our model scans 12 skin parameters: hydration, sebum, texture, pigmentation, pores, and more." },
+                  { num: "03", title: "Your Routine", desc: "Receive a personalised product stack curated specifically for your skin's unique needs." },
+                ].map((item) => (
                   <div key={item.num}>
                     <div style={{ fontFamily: "'Cormorant Garamond'", fontSize: 52, fontWeight: 300, color: "#444", marginBottom: 16 }}>{item.num}</div>
                     <h3 style={{ fontFamily: "'Cormorant Garamond'", fontSize: 26, fontWeight: 400, marginBottom: 12 }}>{item.title}</h3>
@@ -237,7 +239,11 @@ export default function App() {
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
                   {analysisResult.concerns?.map((concern) => {
                     const found = skinConcerns.find((c) => c.key === concern);
-                    return <div key={concern} className="concern-pill">{found?.emoji || "●"} {found?.label || concern}</div>;
+                    return (
+                      <div key={concern} className="concern-pill">
+                        {found?.emoji || "●"} {found?.label || concern}
+                      </div>
+                    );
                   })}
                 </div>
               </div>
@@ -256,7 +262,6 @@ export default function App() {
               )}
             </div>
           </div>
-
           <div style={{ borderTop: "1px solid #EBEBEB", paddingTop: 60 }}>
             <h2 style={{ fontFamily: "'Cormorant Garamond'", fontSize: 40, fontWeight: 300, marginBottom: 40 }}>Your recommended <em>routine</em></h2>
             {recommendedProducts.length === 0 ? (
@@ -277,12 +282,4 @@ export default function App() {
                   </div>
                 ))}
               </div>
-            )}
-          </div>
-          <div style={{ textAlign: "center", marginTop: 60, paddingBottom: 60 }}>
-            <button className="btn-outline" onClick={() => { setStep("home"); setUploadedImage(null); setAnalysisResult(null); }}>
-              </div>
-      )}
-    </div>
-  );
-          }
+    
