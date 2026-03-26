@@ -281,3 +281,8 @@ export default function App() {
           </div>
           <div style={{ textAlign: "center", marginTop: 60, paddingBottom: 60 }}>
             <button className="btn-outline" onClick={() => { setStep("home"); setUploadedImage(null); setAnalysisResult(null); }}>
+              </div>
+      )}
+    </div>
+  );
+          }
